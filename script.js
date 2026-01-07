@@ -107,6 +107,14 @@ function konversiIP(nilai) {
   return 0; // E
 }
 
+function ipToLetter(ip) {
+  if (ip === 4) return 'A';
+  if (ip === 3) return 'B';
+  if (ip === 2) return 'C';
+  if (ip === 1) return 'D';
+  return 'E';
+}
+
 function selectAllSessions(courseIndex) {
   for (let j = 0; j < 15; j++) {
     const checkbox = document.getElementById(`hadir${courseIndex}_${j}`);
@@ -146,21 +154,16 @@ function hitungIPK() {
     }
     const tugasCase = konversi14(tugasCaseCount);
 
-    let projectCount = 0;
-    for (let j = 0; j < 15; j++) {
-      const elem = document.getElementById(`project${i}_${j}`);
-      if (elem && elem.checked) projectCount++;
-    }
-    const project = konversi14(projectCount);
-
     let quizSum = 0;
     let quizCount = 0;
     for (let j = 0; j < 15; j++) {
       const elem = document.getElementById(`quiz${i}_${j}`);
       if (elem) {
         const quizValue = +elem.value || 0;
-        quizSum += quizValue;
-        quizCount++;
+        if (quizValue > 0) {
+          quizSum += quizValue;
+          quizCount++;
+        }
       }
     }
     const quiz = quizCount > 0 ? quizSum / quizCount : 0;
@@ -181,7 +184,7 @@ function hitungIPK() {
     totalNilai += ip * m.sks;
     totalSKS += m.sks;
 
-    output += `${m.nama}: Nilai ${nilaiAkhir.toFixed(2)} | IP ${ip}<br>`;
+    output += `${m.nama}: Nilai ${nilaiAkhir.toFixed(2)} | IP ${ip}=${ipToLetter(ip)}<br>`;
   });
 
   const ipk = (totalNilai / totalSKS).toFixed(2);
