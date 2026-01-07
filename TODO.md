@@ -1,0 +1,2 @@
+- [x] Update script.js to replace quiz checkboxes with 14 number inputs (0-100 each)
+- [x] Update hitungIPK function to average the 14 quiz grades for each course
