@@ -3,37 +3,37 @@ const matkul = [
   {
     nama: "Organisasi Arsitektur Komputer",
     sks: 2,
-    bobot: { hadir:0.10, tugasCase:0.45, project:0.00, quiz:0.05, uts:0.20, uas:0.20 }
+    bobot: { hadir:0.10, tugasCase:0.45,quiz:0.05, uts:0.20, uas:0.20 }
   },
   {
     nama: "Bahasa Inggris",
     sks: 2,
-    bobot: { hadir:0.05, tugasCase:0.30, project:0.00, quiz:0.15, uts:0.25, uas:0.25 }
+    bobot: { hadir:0.05, tugasCase:0.30,quiz:0.15, uts:0.25, uas:0.25 }
   },
   {
     nama: "Pancasila",
     sks: 2,
-    bobot: { hadir:0.10, tugasCase:0.45, project:0.00, quiz:0.05, uts:0.20, uas:0.20 }
+    bobot: { hadir:0.10, tugasCase:0.45,quiz:0.05, uts:0.20, uas:0.20 }
   },
   {
     nama: "Statistika",
     sks: 3,
-    bobot: { hadir:0.10, tugasCase:0.45, project:0.00, quiz:0.05, uts:0.20, uas:0.20 }
+    bobot: { hadir:0.10, tugasCase:0.45,quiz:0.05, uts:0.20, uas:0.20 }
   },
   {
     nama: "Kalkulus",
     sks: 3,
-    bobot: { hadir:0.10, tugasCase:0.45, project:0.00, quiz:0.05, uts:0.20, uas:0.20 }
+    bobot: { hadir:0.10, tugasCase:0.45,quiz:0.05, uts:0.20, uas:0.20 }
   },
   {
     nama: "Logika",
     sks: 3,
-    bobot: { hadir:0.10, tugasCase:0.45, project:0.00, quiz:0.05, uts:0.20, uas:0.20 }
+    bobot: { hadir:0.10, tugasCase:0.45,quiz:0.05, uts:0.20, uas:0.20 }
   },
   {
     nama: "Algoritma",
     sks: 4,
-    bobot: { hadir:0.10, tugasCase:0.45, project:0.00, quiz:0.05, uts:0.20, uas:0.20 }
+    bobot: { hadir:0.10, tugasCase:0.45,quiz:0.05, uts:0.20, uas:0.20 }
   }
 ];
 
@@ -41,39 +41,58 @@ const matkul = [
 const form = document.getElementById("form");
 
 matkul.forEach((m, i) => {
-  let formHtml = `<div class="matkul">
-      <h2>${m.nama} (${m.sks} SKS)</h2>
-      <button class="select-all-btn" onclick="selectAllSessions(${i})">Select All Sessions</button>
-      <button class="select-all-btn" onclick="selectAllCases(${i})">Select All Cases</button>
-      <table class="assessment-table">
-        <thead>
-          <tr>
-            <th>Week</th>
-            <th>Session</th>
-            <th>Case</th>
-            <th>Quiz</th>
-          </tr>
-        </thead>
-        <tbody>`;
-  for (let j = 0; j < 14; j++) {
+  let formHtml = `<div class="tab-content" id="tab-${i}">
+      <div class="matkul">
+        <h2>${m.nama} (${m.sks} SKS)</h2>
+        <button class="select-all-btn" onclick="selectAllSessions(${i})">Select All Sessions</button>
+        <button class="select-all-btn" onclick="selectAllCases(${i})">Select All Cases</button>
+        <table class="assessment-table">
+          <thead>
+            <tr>
+              <th>Week</th>
+              <th>Session</th>
+              <th>Case</th>
+              <th>Quiz</th>
+            </tr>
+          </thead>
+          <tbody>`;
+  for (let j = 0; j < 15; j++) {
+    if (j === 7) continue; // Skip week 8
     formHtml += `<tr>
-          <td>${j+1}</td>
-          <td><input id="hadir${i}_${j}" type="checkbox"></td>
-          <td><input id="tugasCase${i}_${j}" type="checkbox"></td>
-          <td><input id="quiz${i}_${j}" type="number" min="0" max="100" value="0"></td>
-        </tr>`;
+            <td>${j+1}</td>
+            <td><input id="hadir${i}_${j}" type="checkbox"></td>
+            <td><input id="tugasCase${i}_${j}" type="checkbox"></td>
+            <td><input id="quiz${i}_${j}" type="number" min="0" max="100" value="0"></td>
+          </tr>`;
   }
   formHtml += `</tbody>
-      </table>
-      <div class="input-group">
-        <label>UTS <input id="uts${i}" type="number" min="0" max="100"></label>
-        <label>UAS <input id="uas${i}" type="number" min="0" max="100"></label>
+        </table>
+        <div class="input-group">
+          <label>UTS <input id="uts${i}" type="number" min="0" max="100"></label>
+          <label>UAS <input id="uas${i}" type="number" min="0" max="100"></label>
+        </div>
       </div>
     </div>`;
   form.innerHTML += formHtml;
 });
 
+// Show the first tab by default
+document.getElementById("tab-0").style.display = "block";
+
 // ================= FUNGSI =================
+function openTab(tabIndex) {
+  // Hide all tab contents
+  const tabContents = document.querySelectorAll('.tab-content');
+  tabContents.forEach(content => content.style.display = 'none');
+
+  // Show the selected tab content
+  document.getElementById(`tab-${tabIndex}`).style.display = 'block';
+
+  // Update active tab button
+  const tabButtons = document.querySelectorAll('.tab-button');
+  tabButtons.forEach(button => button.classList.remove('active'));
+  tabButtons[tabIndex].classList.add('active');
+}
 function konversi14(x) {
   if (x < 0) x = 0;
   if (x > 14) x = 14;
@@ -82,14 +101,14 @@ function konversi14(x) {
 
 function konversiIP(nilai) {
   if (nilai >= 85) return 4;
-  if (nilai >= 70) return 3;
+  if (nilai >= 73) return 3;
   if (nilai >= 55) return 2;
-  if (nilai >= 40) return 1;
+  if (nilai >= 45) return 1;
   return 0; // E
 }
 
 function selectAllSessions(courseIndex) {
-  for (let j = 0; j < 14; j++) {
+  for (let j = 0; j < 15; j++) {
     const checkbox = document.getElementById(`hadir${courseIndex}_${j}`);
     if (checkbox) {
       checkbox.checked = true;
@@ -98,7 +117,7 @@ function selectAllSessions(courseIndex) {
 }
 
 function selectAllCases(courseIndex) {
-  for (let j = 0; j < 14; j++) {
+  for (let j = 0; j < 15; j++) {
     const checkbox = document.getElementById(`tugasCase${courseIndex}_${j}`);
     if (checkbox) {
       checkbox.checked = true;
@@ -114,21 +133,21 @@ function hitungIPK() {
 
   matkul.forEach((m, i) => {
     let hadirCount = 0;
-    for (let j = 0; j < 14; j++) {
+    for (let j = 0; j < 15; j++) {
       const elem = document.getElementById(`hadir${i}_${j}`);
       if (elem && elem.checked) hadirCount++;
     }
     const hadir = konversi14(hadirCount);
 
     let tugasCaseCount = 0;
-    for (let j = 0; j < 14; j++) {
+    for (let j = 0; j < 15; j++) {
       const elem = document.getElementById(`tugasCase${i}_${j}`);
       if (elem && elem.checked) tugasCaseCount++;
     }
     const tugasCase = konversi14(tugasCaseCount);
 
     let projectCount = 0;
-    for (let j = 0; j < 14; j++) {
+    for (let j = 0; j < 15; j++) {
       const elem = document.getElementById(`project${i}_${j}`);
       if (elem && elem.checked) projectCount++;
     }
@@ -136,11 +155,13 @@ function hitungIPK() {
 
     let quizSum = 0;
     let quizCount = 0;
-    for (let j = 0; j < 14; j++) {
+    for (let j = 0; j < 15; j++) {
       const elem = document.getElementById(`quiz${i}_${j}`);
-      const quizValue = elem ? +elem.value || 0 : 0;
-      quizSum += quizValue;
-      quizCount++;
+      if (elem) {
+        const quizValue = +elem.value || 0;
+        quizSum += quizValue;
+        quizCount++;
+      }
     }
     const quiz = quizCount > 0 ? quizSum / quizCount : 0;
     const utsElem = document.getElementById(`uts${i}`);
@@ -151,7 +172,6 @@ function hitungIPK() {
     const nilaiAkhir =
       hadir      * m.bobot.hadir +
       tugasCase * m.bobot.tugasCase +
-      project   * m.bobot.project +
       quiz      * m.bobot.quiz +
       uts       * m.bobot.uts +
       uas       * m.bobot.uas;
